@@ -8,7 +8,7 @@ Static Markdown to PDF converter.
 - Edit Markdown in the browser.
 - Render GitHub Flavored Markdown.
 - Sanitize rendered HTML.
-- Export through browser print-to-PDF.
+- Export directly to PDF.
 - Keep file contents local to the browser session.
 - Start empty. No bundled default document content.
 
@@ -30,12 +30,12 @@ pnpm build
 - Unified and remark parse Markdown.
 - Rehype sanitizes and serializes HTML.
 - The preview uses sanitized HTML only.
-- PDF export writes the same document HTML into an isolated print frame.
-- CSS controls page size, margins, typography, tables, code, and page breaks.
+- PDF export converts the Markdown AST into a pdfmake document definition.
+- The generated PDF has no browser print headers or footers.
 
 ## Privacy Model
 
 The app has no backend and no upload path. Markdown files are read with the
-browser File API. Export uses the browser print dialog.
+browser File API. Export runs in the browser and downloads a PDF file.
 
 Remote images referenced from Markdown may be fetched by the browser.

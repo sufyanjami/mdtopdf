@@ -1,8 +1,8 @@
-# 0001. Client-Side Print Export
+# 0001. Client-Side PDF Export
 
 ## Status
 
-Accepted.
+Superseded by direct PDF generation.
 
 ## Context
 

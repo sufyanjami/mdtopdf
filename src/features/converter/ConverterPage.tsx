@@ -1,8 +1,8 @@
 import {
   Download,
   FileText,
-  Trash2,
   ShieldCheck,
+  Trash2,
   Upload,
 } from "lucide-react";
 import { useDeferredValue, useMemo, useRef, useState } from "react";
@@ -12,7 +12,7 @@ import {
 } from "../../lib/documentSettings";
 import { readMarkdownFile, stripMarkdownExtension } from "../../lib/fileInput";
 import { getMarkdownTitle } from "../../lib/markdown";
-import { printHtmlDocument } from "../../lib/pdfExport";
+import { downloadMarkdownPdf } from "../../lib/pdfExport";
 import { Button } from "@/components/ui/button";
 import { DocumentSettingsPanel } from "./components/DocumentSettingsPanel";
 import { DocumentStats } from "./components/DocumentStats";
@@ -79,8 +79,8 @@ export function ConverterPage() {
     setExportError(null);
 
     try {
-      await printHtmlDocument({
-        html: rendered.html,
+      await downloadMarkdownPdf({
+        markdown: source,
         settings,
         title: documentTitle,
       });
@@ -99,7 +99,7 @@ export function ConverterPage() {
   }
 
   const canExport =
-    rendered.status === "ready" && rendered.html.trim().length > 0;
+    rendered.status === "ready" && source.trim().length > 0;
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -183,7 +183,7 @@ export function ConverterPage() {
 
       <footer className="mx-auto flex max-w-[1800px] items-center gap-2 px-4 pb-4 font-mono text-xs text-muted-foreground">
         <ShieldCheck size={15} aria-hidden="true" />
-        <span>No backend. No upload. Browser print creates the PDF.</span>
+        <span>No backend. No upload. Direct PDF download.</span>
         <span className="text-foreground">Built by Sufyan Jami</span>
       </footer>
     </main>

@@ -55,7 +55,8 @@ All authored text and comments follow
 - No backend. No file upload. Conversion runs in the browser.
 - Raw Markdown HTML stays disabled unless an ADR approves the change.
 - Use strict TypeScript. Do not use `any`.
-- Use browser print output for PDF generation.
+- Use client-side PDF generation. Do not require a backend or browser print
+  dialog.
 - Keep document styling separate from application chrome.
 - Use local shadcn-style components for shared UI primitives.
 - Test production builds, not only the dev server.

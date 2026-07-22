@@ -1,35 +1,50 @@
 import { describe, expect, it } from "vitest";
 import { defaultDocumentSettings } from "./documentSettings";
-import { createDocumentCss, createPrintDocument } from "./pdfExport";
+import {
+  createPdfDocumentDefinition,
+  createPdfFileName,
+} from "./pdfExport";
 
-describe("createPrintDocument", () => {
-  it("escapes the title and keeps sanitized body HTML", () => {
-    const html = createPrintDocument({
-      html: "<h1>Report</h1>",
+describe("createPdfDocumentDefinition", () => {
+  it("creates a direct PDF definition without browser headers or footers", () => {
+    const definition = createPdfDocumentDefinition({
+      markdown: "# Report\n\n- Item\n\n| A | B |\n| --- | --- |\n| 1 | 2 |",
       settings: defaultDocumentSettings,
-      title: "A < B & C",
+      title: "Report",
     });
 
-    expect(html).toContain("<title>A &lt; B &amp; C</title>");
-    expect(html).toContain(
-      '<article class="document-content"><h1>Report</h1></article>',
-    );
+    expect(definition.pageSize).toBe("LETTER");
+    expect(definition.header).toBeUndefined();
+    expect(definition.footer).toBeUndefined();
+    expect(JSON.stringify(definition.content)).toContain('"ul"');
+    expect(JSON.stringify(definition.content)).toContain('"table"');
+  });
+
+  it("uses compact A4 and serif settings", () => {
+    const definition = createPdfDocumentDefinition({
+      markdown: "Body",
+      settings: {
+        density: "compact",
+        pageSize: "a4",
+        typeface: "serif",
+      },
+      title: "Body",
+    });
+
+    expect(definition.pageSize).toBe("A4");
+    expect(definition.pageMargins).toEqual([40, 40, 40, 40]);
+    expect(definition.defaultStyle).toMatchObject({
+      font: "Times",
+      fontSize: 10.5,
+    });
   });
 });
 
-describe("createDocumentCss", () => {
-  it("uses selected page size and typography", () => {
-    const css = createDocumentCss({
-      density: "compact",
-      pageSize: "a4",
-      typeface: "serif",
-    });
-
-    expect(css).toContain("size: A4");
-    expect(css).toContain("font-size: 10.5pt");
-    expect(css).toContain("Georgia");
-    expect(css).toContain("#27272a");
-    expect(css).toContain("list-style: disc");
-    expect(css).toContain('content: "\\00a0"');
+describe("createPdfFileName", () => {
+  it("creates a safe PDF filename", () => {
+    expect(createPdfFileName("Quarterly Report: Q1")).toBe(
+      "quarterly-report-q1.pdf",
+    );
+    expect(createPdfFileName(" ")).toBe("markdown-document.pdf");
   });
 });
