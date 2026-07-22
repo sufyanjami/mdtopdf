@@ -1,0 +1,4 @@
+autoInstallPeers: false
+engineStrict: true
+minimumReleaseAgeExclude:
+  - '@vitejs/plugin-react@6.0.4'
